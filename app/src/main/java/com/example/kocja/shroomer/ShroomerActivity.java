@@ -43,7 +43,8 @@ public class ShroomerActivity extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     FusedLocationProviderClient fusedLocationClient;
     Location yourlocation;
-    int addShroomrequest = 2, REQUEST_SHROOMDATA = 3;
+    private static final int addShroomrequest = 2;
+    private static final int REQUEST_SHROOMDATA = 3;
     int indexOfType;
     Marker publicMarker, shroomMarker;
     Resources resource;
@@ -184,11 +185,8 @@ public class ShroomerActivity extends FragmentActivity implements OnMapReadyCall
                                 boolean isDoneOnce = false;
                                 allLocations = tResult;
                                 for(markerLocatio marker : allLocations) {
-
-
                                     location.setLatitude(Double.parseDouble(marker.latitude));
                                     location.setLongitude(Double.parseDouble(marker.longtitude));
-
                                     float distanceTo = yourlocation.distanceTo(location);
 
                                     if(!isDoneOnce && distanceTo <= 3.00){
@@ -211,11 +209,13 @@ public class ShroomerActivity extends FragmentActivity implements OnMapReadyCall
                                                     }
                                                 });
                                         builder.show();
+                                        //i turn off the checking since if one is found there is no use in searching for others
                                         isDoneOnce = true;
                                     }
-                                    else{
-                                        startActivityForResult(elseAddShroomIntent, addShroomrequest);
-                                    }
+
+                                }
+                                if(!isDoneOnce){
+                                    startActivityForResult(elseAddShroomIntent, addShroomrequest);
                                 }
                                 if(allLocations.size() == 0){
                                     startActivityForResult(elseAddShroomIntent, addShroomrequest);

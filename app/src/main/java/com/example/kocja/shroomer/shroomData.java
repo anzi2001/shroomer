@@ -20,12 +20,12 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 /**
- * Intent for viewing, deleting, and calling for eiditing the contents of the marker
+ * Intent for viewing, deleting, and calling for editing the contents of the marker
  */
 
 public class shroomData extends AppCompatActivity {
     markerLocatio locatio;
-    int requestEditShoom =5;
+    private static final int requestEditShoom =5;
     RequestOptions options = new RequestOptions().centerCrop();
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
