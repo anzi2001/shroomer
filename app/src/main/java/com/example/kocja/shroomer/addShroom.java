@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,21 +43,23 @@ public class addShroom extends AppCompatActivity {
     ImageView photoOfShroom;
     String photoURIString;
     int id;
+    RequestOptions options;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addshroom);
-        final ImageSwitcher switcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
+        final ImageSwitcher switcher = findViewById(R.id.imageSwitcher);
 
         inAnimForward = AnimationUtils.loadAnimation(addShroom.this,R.anim.slide_in_right);
         outAnimForward = AnimationUtils.loadAnimation(addShroom.this,R.anim.slide_out_left);
         inAnimBack = AnimationUtils.loadAnimation(addShroom.this,android.R.anim.slide_in_left);
         outAnimBack = AnimationUtils.loadAnimation(addShroom.this,android.R.anim.slide_out_right);
-        photoOfShroom = (ImageView) findViewById(R.id.photoOfShroom);
+        photoOfShroom =  findViewById(R.id.photoOfShroom);
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
-        final ImageButton forwardButton = (ImageButton) findViewById(R.id.forwardbutton);
-        final ImageButton takeAPhotoShroom = (ImageButton) findViewById(R.id.takePhotoShroom);
+        final ImageButton backButton = findViewById(R.id.backButton);
+        final ImageButton forwardButton = findViewById(R.id.forwardbutton);
+        final ImageButton takeAPhotoShroom = findViewById(R.id.takePhotoShroom);
+        options = new RequestOptions().centerCrop();
 
         switcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -134,7 +137,7 @@ public class addShroom extends AppCompatActivity {
             }
         });
 
-        ImageButton checkDone = (ImageButton) findViewById(R.id.check_Done);
+        ImageButton checkDone = findViewById(R.id.check_Done);
         checkDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +206,7 @@ public class addShroom extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
             //display a picture in intent. Save the uri as a string so i can save it later.
-            Glide.with(this).load(photoURI).centerCrop().into(photoOfShroom);
+            Glide.with(this).load(photoURI).apply(options).into(photoOfShroom);
             photoURIString = photoURI.toString();
 
         }

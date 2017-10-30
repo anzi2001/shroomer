@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
@@ -23,19 +26,24 @@ import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransacti
 public class shroomData extends AppCompatActivity {
     markerLocatio locatio;
     int requestEditShoom =5;
+    RequestOptions options = new RequestOptions().centerCrop();
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shroomdata);
 
-        final ImageView shroomImage = (ImageView) findViewById(R.id.shroomImage);
-        final TextView DateOfFound = (TextView) findViewById(R.id.DateOfFound);
-        final TextView ShroomType = (TextView) findViewById(R.id.ShroomType);
-        final ImageButton deleteEntry = (ImageButton) findViewById(R.id.deleteEntry);
-        final ImageButton editButton = (ImageButton) findViewById(R.id.editbutton);
+        final ImageView shroomImage = findViewById(R.id.shroomImage);
+        final TextView DateOfFound = findViewById(R.id.DateOfFound);
+        final TextView ShroomType = findViewById(R.id.ShroomType);
+        final ImageButton deleteEntry = findViewById(R.id.deleteEntry);
+        final ImageButton editButton = findViewById(R.id.editbutton);
 
         final Intent thisIntent = getIntent();
         double latitude = thisIntent.getDoubleExtra("setLatitude",-1);
-        FlowManager.init(this);
+        FlowManager.init(FlowConfig.builder(getApplicationContext())
+                .addDatabaseConfig(DatabaseConfig.builder(AppDatabase.class)
+                        .databaseName("AppDatabase")
+                        .build())
+                .build());
          SQLite.select()
                 .from(markerLocatio.class)
                 .where(markerLocatio_Table.latitude.eq(Double.toString(latitude)))
@@ -47,7 +55,7 @@ public class shroomData extends AppCompatActivity {
                          if(locatio != null) {
                              DateOfFound.setText(locatio.dateofShroomFound);
                              ShroomType.setText(locatio.Shroom_type);
-                             Glide.with(shroomData.this).load(locatio.photoURI).centerCrop().into(shroomImage);
+                             Glide.with(shroomData.this).load(locatio.photoURI).apply(options).into(shroomImage);
                          }
                      }
                  }).execute();

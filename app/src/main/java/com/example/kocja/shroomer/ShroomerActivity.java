@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,6 +29,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -75,7 +76,7 @@ public class ShroomerActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         final Location location = new Location(LocationManager.GPS_PROVIDER);
-        final FloatingActionButton addShroom = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        final FloatingActionButton addShroom = findViewById(R.id.floatingActionButton);
         resource = getApplicationContext().getResources();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -102,7 +103,11 @@ public class ShroomerActivity extends FragmentActivity implements OnMapReadyCall
         }
 
         //Initialize database
-        FlowManager.init(this);
+        FlowManager.init(FlowConfig.builder(getApplicationContext())
+                .addDatabaseConfig(DatabaseConfig.builder(AppDatabase.class)
+                        .databaseName("AppDatabase")
+                        .build())
+                .build());
         FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
 
         SQLite.select()
